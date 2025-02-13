@@ -45,11 +45,12 @@ def main():
                 weather_icon = get_weather_icon(icon_code)
                 st.image(weather_icon)
                 
-                # Display weather information
-                st.write(f"**Temperature:** {weather_data['main']['temp']} °C")
-                st.write(f"**Weather:** {weather_data['weather'][0]['description'].capitalize()}")
-                st.write(f"**Humidity:** {weather_data['main']['humidity']}%")
-                st.write(f"**Wind Speed:** {weather_data['wind']['speed']} m/s")
+                # Display weather information with emojis
+                st.write(f"**🌡️ Temperature:** {weather_data['main']['temp']} °C")
+                st.write(f"**☁️ Weather:** {weather_data['weather'][0]['description'].capitalize()}")
+                st.write(f"**💧 Humidity:** {weather_data['main']['humidity']}%")
+                st.write(f"**🌬️ Wind Speed:** {weather_data['wind']['speed']} m/s")
+                st.write(f"**🌀 Air Pressure:** {weather_data['main']['pressure']} hPa")
                 
                 # Background image based on weather
                 weather_main = weather_data['weather'][0]['main'].lower()
