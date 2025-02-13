@@ -3,6 +3,7 @@ import requests
 from datetime import datetime
 from PIL import Image
 from io import BytesIO
+from streamlit_lottie import st_lottie
 
 # Function to get weather data
 def get_weather(city, api_key):
@@ -20,6 +21,13 @@ def get_weather_icon(icon_code):
     icon_url = f"http://openweathermap.org/img/wn/{icon_code}@4x.png"
     response = requests.get(icon_url)
     return Image.open(BytesIO(response.content))
+
+# Function to load Lottie animations
+def load_lottie_url(url):
+    response = requests.get(url)
+    if response.status_code != 200:
+        return None
+    return response.json()
 
 # Streamlit app
 def main():
@@ -39,18 +47,30 @@ def main():
                 st.error(weather_data.get("message"))
             else:
                 st.success(f"Weather in {city}:")
-                
+
                 # Display weather icon
                 icon_code = weather_data['weather'][0]['icon']
                 weather_icon = get_weather_icon(icon_code)
                 st.image(weather_icon)
+
+                # Display weather information with icons
+                col1, col2, col3 = st.columns(3)
                 
-                # Display weather information
-                st.write(f"**Temperature:** {weather_data['main']['temp']} °C")
-                st.write(f"**Weather:** {weather_data['weather'][0]['description'].capitalize()}")
-                st.write(f"**Humidity:** {weather_data['main']['humidity']}%")
-                st.write(f"**Wind Speed:** {weather_data['wind']['speed']} m/s")
+                with col1:
+                    st_lottie(load_lottie_url("https://assets9.lottiefiles.com/packages/lf20_kq5rGs.json"), height=100, key="temperature")
+                    st.metric(label="Temperature", value=f"{weather_data['main']['temp']} °C")
                 
+                with col2:
+                    st_lottie(load_lottie_url("https://assets9.lottiefiles.com/packages/lf20_J5Gh0V.json"), height=100, key="humidity")
+                    st.metric(label="Humidity", value=f"{weather_data['main']['humidity']}%")
+                
+                with col3:
+                    st_lottie(load_lottie_url("https://assets9.lottiefiles.com/packages/lf20_6unl4hkp.json"), height=100, key="wind")
+                    st.metric(label="Wind Speed", value=f"{weather_data['wind']['speed']} m/s")
+
+                st_lottie(load_lottie_url("https://assets9.lottiefiles.com/packages/lf20_y1ymv1n4.json"), height=100, key="pressure")
+                st.metric(label="Air Pressure", value=f"{weather_data['main']['pressure']} hPa")
+
                 # Background image based on weather
                 weather_main = weather_data['weather'][0]['main'].lower()
                 if weather_main in ["clear", "clouds"]:
