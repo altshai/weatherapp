@@ -23,7 +23,37 @@ def get_weather_icon(icon_code):
 
 # Streamlit app
 def main():
-    st.set_page_config(layout="centered")
+    st.set_page_config(layout="centered", page_title="Weather App")
+    st.markdown(
+        """
+        <style>
+        .stApp {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .stApp h1 {
+            color: #4CAF50;
+            text-align: center;
+            font-size: 3em;
+        }
+        .stApp .stTextInput>div>div>input {
+            font-size: 1.2em;
+        }
+        .stApp .stButton>button {
+            font-size: 1.2em;
+            background-color: #4CAF50;
+            color: white;
+        }
+        .stApp .stAlert {
+            font-size: 1.2em;
+        }
+        .stApp .stMarkdown p {
+            font-size: 1.2em;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+
     st.title("🌤️ Weather App 🌧️")
     
     # Use the provided API key
@@ -32,26 +62,26 @@ def main():
 
     if st.button("Get Weather"):
         if not city:
-            st.error("Please enter a city name")
+            st.error("**Please enter a city name**")
         else:
             weather_data = get_weather(city, api_key)
             if weather_data.get("cod") != 200:
-                st.error(weather_data.get("message"))
+                st.error(f"**{weather_data.get('message')}**")
             else:
-                st.success(f"Weather in {city}:")
-                
+                st.success(f"**Weather in {city}:**")
+
                 # Display weather icon
                 icon_code = weather_data['weather'][0]['icon']
                 weather_icon = get_weather_icon(icon_code)
                 st.image(weather_icon)
-                
+
                 # Display weather information with emojis
-                st.write(f"**🌡️ Temperature:** {weather_data['main']['temp']} °C")
-                st.write(f"**☁️ Weather:** {weather_data['weather'][0]['description'].capitalize()}")
-                st.write(f"**💧 Humidity:** {weather_data['main']['humidity']}%")
-                st.write(f"**🌬️ Wind Speed:** {weather_data['wind']['speed']} m/s")
-                st.write(f"**🌀 Air Pressure:** {weather_data['main']['pressure']} hPa")
-                
+                st.markdown(f"**🌡️ Temperature:** *{weather_data['main']['temp']} °C*")
+                st.markdown(f"**☁️ Weather:** *{weather_data['weather'][0]['description'].capitalize()}*")
+                st.markdown(f"**💧 Humidity:** *{weather_data['main']['humidity']}%*")
+                st.markdown(f"**🌬️ Wind Speed:** *{weather_data['wind']['speed']} m/s*")
+                st.markdown(f"**🌀 Air Pressure:** *{weather_data['main']['pressure']} hPa*")
+
                 # Background image based on weather
                 weather_main = weather_data['weather'][0]['main'].lower()
                 if weather_main in ["clear", "clouds"]:
