@@ -1,5 +1,7 @@
-opencv-python
-face-recognition
+opencv-python-headless
 numpy
 pandas
+cmake
 dlib
+face-recognition
+streamlit
